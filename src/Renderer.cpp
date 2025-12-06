@@ -14,10 +14,15 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void setFullscreen(GLFWwindow* window);
+void unsetFullscreen(GLFWwindow* window);
+
+auto primaryMonitor = glfwGetPrimaryMonitor();
 
 // settings
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
+bool fullscreen = false;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -44,7 +49,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", primaryMonitor, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -55,6 +60,7 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetWindowPos(window, 500, 250);
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -236,6 +242,29 @@ void processInput(GLFWwindow* window)
         camera.Position.y += 0.01;
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         camera.Position.y -= 0.01;
+
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS && !fullscreen)
+        setFullscreen(window);
+    if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS && fullscreen)
+        unsetFullscreen(window);
+}
+
+void setFullscreen(GLFWwindow* window)
+{
+    SCR_WIDTH = 1920;
+    SCR_HEIGHT = 1080;
+    glfwSetWindowMonitor(window, primaryMonitor, 0, 0, SCR_WIDTH, SCR_HEIGHT, 0);
+    glfwFocusWindow(window);
+    fullscreen = true;
+}
+
+void unsetFullscreen(GLFWwindow* window)
+{
+    SCR_WIDTH = 800;
+    SCR_HEIGHT = 600;
+    glfwSetWindowSize(window, SCR_WIDTH, SCR_HEIGHT);
+    glfwSetWindowPos(window, 500, 250);
+    fullscreen = false;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
