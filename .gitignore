@@ -365,3 +365,4 @@ FodyWeavers.xsd
 # Personal
 *Engine.7z
 *src/.root_directory.h
+*EngineInput.cpp
