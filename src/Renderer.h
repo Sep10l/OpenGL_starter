@@ -94,14 +94,20 @@ public:
     {
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
     }
-    void setVec3(const std::string& name, float x, float y, float z)
+    // Overloaded functions
+    const void setVec3(const std::string& name, const float x, const float y, const float z)
     {
         glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(glm::vec3(x,y,z)));
     }
-    void setVec3(const std::string& name, glm::vec3 vector)
+    const void setVec3(const std::string& name, const glm::vec3 vector)
     {
         glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(glm::vec3(vector.x, vector.y, vector.z)));
     }
+
+    const float GetFloatLocation(const std::string& nm) const { return glGetUniformLocation(ID, nm.c_str()); }
+
+    // find out how to ostream the uniform float
+    /*void GetFloatValue(const std::string& uniformName) const { std::cout << glUniform1f(ID, glGetUniformLocation(ID, uniformName.c_str())); }*/
 
 private:
     // utility function for checking shader compilation/linking errors.
